@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Bac à sable</title>
+
+  <link href="./assets/bootstrap.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <link href="./style.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div id="app">
+    <div class="container">
+      <div class="row">
+        <p class="jumbotron">login: <input type="text" v-model="user"> | Vous etes connecter en temps que {{user}}</p>
+      </div>
+
+      <h1 class="display-4" v-if="commandes.length > 0">Produit commandés</h1>
+      <div class="row">
+        <fiche-produit v-for="commande of commandes"v-bind:nom="commande" role="recap"></fiche-produit>
+      </div>
+
+      <h1 v-bind:class="affichage">Produits disponible</h1>
+      <div class="row">
+        <fiche-produit v-for="produit of produits" v-bind:nom="produit" v-on:commande-passee="commander" role="commande">
+        </fiche-produit>
+
+
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+  <script>
+    Vue.component('fiche-produit', {
+      template: `
+      <div class="col-3"> <p class="jumbotron">{{ nom }}<br>
+        <button v-on:click="passer_commande(nom)" v-if="role=='commande'" >Commander</button>
+        </p>
+       </div> 
+       `,
+      props: ['nom', 'role'],
+      methods: {
+        passer_commande: function (produit) {
+          this.$emit('commande-passee', produit)
+        }
+      }
+    })
+    let app = new Vue({
+      el: "#app",
+      data: {
+        user: "Bertrand",
+        produits: ["Pizza", "Hamburger", "Cheesbuerger", "Tacos"],
+        commandes: [],
+        affichage: "display-4"
+      },
+      methods: {
+        commander: function (produit) {
+          this.commandes.push(produit);
+          console.log(this.commandes);
+        }
+      }
+    })
+  </script>
+
+  <script src="./assets/bootstrap.js" type="text/javascript"></script>
+  <script src="./script.js" type="text/javascript"></script>
+</body>
+
+
+
+</html>
